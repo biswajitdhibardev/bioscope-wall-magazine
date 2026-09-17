@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Suspense } from 'react';
 import { useState } from 'react';
@@ -15,6 +15,14 @@ import { Card } from '@/components/ui/Card';
 type LoginForm = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+      <LoginContent/>
+    </Suspense>
+  );
+}
+
+function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);

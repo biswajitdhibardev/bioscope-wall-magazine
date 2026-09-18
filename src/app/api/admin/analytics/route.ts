@@ -99,7 +99,7 @@ export async function GET() {
         reactions: f.reactions,
         anonymous_session_id: f.anonymous_session_id,
         created_at: f.created_at,
-        artwork_title: f.artworks?.[0]?.title || 'Untitled',
+        artwork_title: f.artworks?.title || 'Untitled',
       })),
     };
 

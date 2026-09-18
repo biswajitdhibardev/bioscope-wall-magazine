@@ -6,9 +6,18 @@ import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { ADMIN_NAV_LINKS } from '@/lib/constants';
 import { LucideIcon } from 'lucide-react';
-import { 
-  LayoutDashboard, Image, Users, Calendar, MessageSquare, 
-  BarChart3, QrCode, Settings, LogOut, Menu, X 
+import {
+  LayoutDashboard,
+  Image,
+  Users,
+  Calendar,
+  MessageSquare,
+  BarChart3,
+  QrCode,
+  Settings,
+  LogOut,
+  Menu,
+  X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -23,102 +32,188 @@ const iconMap: Record<string, LucideIcon> = {
   Settings
 };
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+export default function AdminLayout({
+  children
+}: {
+  children: React.ReactNode;
+}) {
+  const [mobileMenuOpen, setMobileMenuOpen] =
+    useState(false);
+
   const pathname = usePathname();
   const router = useRouter();
 
   const handleLogout = async () => {
     const supabase = createClient();
+
     await supabase.auth.signOut();
+
     router.push('/admin/login');
     router.refresh();
   };
 
-  if (pathname === '/admin/login') return <>{children}</>;
+  if (pathname === '/admin/login') {
+    return <>{children}</>;
+  }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-[#fafafa] flex">
-      {/* Mobile overlay */}
+    <div className="h-screen overflow-hidden bg-[#0a0a0a] text-[#fafafa]">
+
+      {/* =====================================================
+          MOBILE OVERLAY
+          ===================================================== */}
+
       {mobileMenuOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-          onClick={() => setMobileMenuOpen(false)}
+          onClick={() =>
+            setMobileMenuOpen(false)
+          }
         />
       )}
 
-      {/* Sidebar */}
-      <aside className={cn(
-        "fixed inset-y-0 left-0 z-50 w-[260px] bg-[#141414] border-r border-[#262626] transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:block",
-        mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-      )}>
+
+      <aside
+        className={cn(
+          "fixed inset-y-0 left-0 z-50 w-[260px] bg-[#141414] border-r border-[#262626] transform transition-transform duration-200 ease-in-out lg:translate-x-0",
+
+          mobileMenuOpen
+            ? "translate-x-0"
+            : "-translate-x-full"
+        )}
+      >
+
         <div className="h-full flex flex-col">
-          <div className="p-6 flex items-center justify-between">
+
+
+          <div className="p-6 flex items-center justify-between shrink-0">
+
             <div>
-              <h2 className="text-xl font-serif text-[#fafafa]">Bioscope</h2>
-              <span className="text-xs text-[#c9a84c] uppercase tracking-wider font-semibold">Admin</span>
+              <h2 className="text-xl font-serif text-[#fafafa]">
+                Bioscope
+              </h2>
+
+              <span className="text-xs text-[#c9a84c] uppercase tracking-wider font-semibold">
+                Admin
+              </span>
             </div>
-            <button className="lg:hidden text-gray-400" onClick={() => setMobileMenuOpen(false)}>
+
+            {/* Mobile close button */}
+            <button
+              className="lg:hidden text-gray-400 hover:text-white transition-colors"
+              onClick={() =>
+                setMobileMenuOpen(false)
+              }
+            >
               <X size={20} />
             </button>
+
           </div>
+
           
-          <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
+
+          <nav className="flex-1 min-h-0 px-4 space-y-1 overflow-y-auto">
+
             {ADMIN_NAV_LINKS?.map((link) => {
-              const Icon = iconMap[link.icon] || LayoutDashboard;
-              const isActive = pathname === link.href || (link.href !== '/admin' && pathname.startsWith(link.href));
-              
+
+              const Icon =
+                iconMap[link.icon] ||
+                LayoutDashboard;
+
+              const isActive =
+                pathname === link.href ||
+                (
+                  link.href !== '/admin' &&
+                  pathname.startsWith(
+                    link.href
+                  )
+                );
+
               return (
-                <Link 
-                  key={link.href} 
+                <Link
+                  key={link.href}
                   href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={() =>
+                    setMobileMenuOpen(false)
+                  }
                   className={cn(
                     "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
-                    isActive 
-                      ? "bg-[#c9a84c]/10 text-[#c9a84c]" 
+
+                    isActive
+                      ? "bg-[#c9a84c]/10 text-[#c9a84c]"
                       : "text-gray-400 hover:text-gray-200 hover:bg-[#262626]/50"
                   )}
                 >
-                  <Icon size={18} className={isActive ? "text-[#c9a84c]" : ""} />
+
+                  <Icon
+                    size={18}
+                    className={
+                      isActive
+                        ? "text-[#c9a84c]"
+                        : ""
+                    }
+                  />
+
                   {link.label}
+
                 </Link>
               );
             })}
+
           </nav>
-          
-          <div className="p-4 border-t border-[#262626]">
-            <button 
+
+
+          <div className="p-4 border-t border-[#262626] shrink-0">
+
+            <button
               onClick={handleLogout}
               className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-400 hover:text-red-400 hover:bg-red-400/10 w-full transition-colors"
             >
               <LogOut size={18} />
+
               Sign Out
             </button>
+
           </div>
+
         </div>
+
       </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Topbar */}
-        <header className="h-16 bg-[#141414]/80 backdrop-blur-sm border-b border-[#262626] flex items-center justify-between px-4 lg:px-8 z-30 sticky top-0">
+
+      <main className="h-screen lg:ml-[260px] flex flex-col min-w-0">
+
+        <header className="h-16 shrink-0 bg-[#141414]/80 backdrop-blur-sm border-b border-[#262626] flex items-center justify-between px-4 lg:px-8 z-30 sticky top-0">
+
           <div className="flex items-center gap-4">
-            <button 
+
+            {/* Mobile menu button */}
+            <button
               className="lg:hidden text-gray-400 hover:text-white"
-              onClick={() => setMobileMenuOpen(true)}
+              onClick={() =>
+                setMobileMenuOpen(true)
+              }
             >
               <Menu size={24} />
             </button>
-            <h1 className="text-lg font-medium hidden sm:block">Admin Dashboard</h1>
+
+            <h1 className="text-lg font-medium hidden sm:block">
+              Admin Dashboard
+            </h1>
+
           </div>
+
         </header>
 
-        {/* Page Content */}
-        <div className="flex-1 overflow-y-auto p-4 lg:p-8">
+
+        <div className="flex-1 min-h-0 overflow-y-auto p-4 lg:p-8">
+
           {children}
+
         </div>
+
       </main>
+
     </div>
   );
 }

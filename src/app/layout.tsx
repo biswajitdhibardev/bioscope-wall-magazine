@@ -4,6 +4,7 @@ import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { ToastProvider } from '@/components/ui/Toast';
+import { Analytics } from '@vercel/analytics/next';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -40,6 +41,7 @@ export default function RootLayout({
           </main>
           <Footer />
         </ToastProvider>
+        <Analytics />
       </body>
     </html>
   );
